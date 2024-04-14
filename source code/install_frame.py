@@ -53,22 +53,17 @@ def install_tak():
             subprocess.run(install_postgres1.split(' '))
             subprocess.run(['sudo', 'sh', '-c', install_postgres2])
             subprocess.run(['sudo', 'apt', 'update'])
-            subprocess.run(['sudo', 'apt', 'install', 'postgresql-15'])
-            if('postgresql-15' in check_postgresql[1]):
-                print('\n////////// postgresql installed. //////////')
+            subprocess.run(['sudo', 'apt', 'install', 'postgresql-15'], input=b'y\n')
+            print('\n////////// postgresql installed. //////////')
         else:
             print('\n////////// postgresql exists. //////////')
 
-        if('postgresql-15' in check_postgresql[1]): 
-            os.chdir(filepath)
-            # wait for the process to be processed for a bit and wait until it shows a prompt and THEN press y.
-            subprocess.run(['sudo', 'apt', 'install', './{}'.format(filename)], input=b'y\n')
-            print('\n////////// TAK installation complete. //////////')
-            status['installation_started'] = False
-            tak_checker()
-        else:
-            print('\n////////// TAK installation could not be installed. //////////')
-            status['installation_started'] = False
+        os.chdir(filepath)
+        # wait for the process to be processed for a bit and wait until it shows a prompt and THEN press y.
+        subprocess.run(['sudo', 'apt', 'install', './{}'.format(filename)], input=b'y\n')
+        print('\n////////// TAK installation complete. //////////')
+        status['installation_started'] = False
+        tak_checker()
 
 def uninstall_tak():
     # stop takserver
