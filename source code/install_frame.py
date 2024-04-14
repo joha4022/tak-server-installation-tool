@@ -55,12 +55,12 @@ def install_tak():
             print(' '.join(test.args))
             subprocess.run(['sudo', 'apt', 'update'])
             subprocess.run(['sudo', 'apt-get', '-y', 'install', 'postgresql'])
-            if('postgresql' in check_postgresql):
+            if('postgresql' in check_postgresql[1]):
                 print('\n////////// postgresql installed. //////////')
         else:
             print('\n////////// postgresql exists. //////////')
 
-        if('postgresql' in check_postgresql): 
+        if('postgresql' in check_postgresql[1]): 
             os.chdir(filepath)
             # wait for the process to be processed for a bit and wait until it shows a prompt and THEN press y.
             subprocess.run(['sudo', 'apt', 'install', './{}'.format(filename)], input=b'y\n')
