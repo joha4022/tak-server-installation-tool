@@ -11,7 +11,7 @@ import os
 # instantiate an instance of a window
 window = Tk()
 # window.geometry("400x200")
-window.title("TAK Installation Tool")
+window.title("TAK Automation Tool")
 frame = ttk.Frame(window)
 frame.grid()
 
