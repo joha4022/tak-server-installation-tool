@@ -55,7 +55,7 @@ def install_tak():
             print(' '.join(test.args))
             subprocess.run(['sudo', 'apt', 'update'])
             subprocess.run(['sudo', 'apt-get', '-y', 'install', 'postgresql'])
-            if('postgresql-15' in check_postgresql):
+            if('postgresql' in check_postgresql):
                 print('\n////////// postgresql installed. //////////')
         else:
             print('\n////////// postgresql exists. //////////')
