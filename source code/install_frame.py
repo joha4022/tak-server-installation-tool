@@ -46,21 +46,22 @@ def install_tak():
 
         # install postgresql
         check_keyrings_dir = subprocess.run(['ls'], cwd='/etc/apt/keyrings', stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
-        check_postgresql = subprocess.run(['sudo', 'apt', 'list', '--installed', 'postgresql'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
-        if('postgresql.asc' not in check_keyrings_dir or 'postgresql' not in check_postgresql[1]):
+        check_postgresql = subprocess.run(['sudo', 'apt', 'list', '--installed', 'postgresql-15'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
+        if('postgresql.asc' not in check_keyrings_dir or 'postgresql-15' not in check_postgresql[1]):
             install_postgres1 = 'sudo curl https://www.postgresql.org/media/keys/ACCC4CF8.asc --output /etc/apt/keyrings/postgresql.asc'
             install_postgres2 = "'"'echo "deb [signed-by=/etc/apt/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" /etc/apt/sources.list.d/postgresql.list'"'"
             subprocess.run(install_postgres1.split(' '))
             test = subprocess.run(['sudo', 'sh', '-c', install_postgres2])
             print(' '.join(test.args))
             subprocess.run(['sudo', 'apt', 'update'])
-            subprocess.run(['sudo', 'apt-get', '-y', 'install', 'postgresql'])
-            if('postgresql' in check_postgresql[1]):
+            subprocess.run(['sudo', 'apt', 'install', 'postgresql-15'])
+            # subprocess.run(['sudo', 'apt', 'upgrade'], input=b'y\n')
+            if('postgresql-15' in check_postgresql[1]):
                 print('\n////////// postgresql installed. //////////')
         else:
             print('\n////////// postgresql exists. //////////')
 
-        if('postgresql' in check_postgresql[1]): 
+        if('postgresql-15' in check_postgresql[1]): 
             os.chdir(filepath)
             # wait for the process to be processed for a bit and wait until it shows a prompt and THEN press y.
             subprocess.run(['sudo', 'apt', 'install', './{}'.format(filename)], input=b'y\n')
