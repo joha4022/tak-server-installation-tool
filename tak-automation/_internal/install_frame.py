@@ -46,7 +46,7 @@ def install_tak():
 
         # install postgresql
         check_keyrings_dir = subprocess.run(['ls'], cwd='/etc/apt/keyrings', stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
-        check_postgresql = subprocess.run(['sudo', 'apt', 'list', '--installed', 'postgresql-15'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
+        check_postgresql = subprocess.run(['sudo', 'apt', 'list', '--installed', 'postgresql'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
         if('postgresql.asc' not in check_keyrings_dir or 'postgresql' not in check_postgresql[1]):
             install_postgres1 = 'sudo curl https://www.postgresql.org/media/keys/ACCC4CF8.asc --output /etc/apt/keyrings/postgresql.asc'
             install_postgres2 = "'"'echo "deb [signed-by=/etc/apt/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" /etc/apt/sources.list.d/postgresql.list'"'"
