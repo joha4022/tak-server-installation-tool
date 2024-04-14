@@ -18,7 +18,7 @@ def install_tak():
     # check for java
     check_java = subprocess.run(['sudo','java', '-version'], stderr=subprocess.PIPE, universal_newlines=True).stderr.split('\n')
     if('openjdk' not in check_java[0]):
-        subprocess.run(['sudo', 'apt', 'install', 'default-jre'])
+        subprocess.run(['sudo', 'apt', 'install', 'default-jre'], input=b'y\n')
         print('\n///////// {} installed. //////////'.format(check_java[0]))
     else:
         print('////////// current version of java: {}. //////////'.format(check_java[0]))
