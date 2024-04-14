@@ -14,8 +14,9 @@ def install_tak():
     # install WINTAK
     os.chdir('/home')
     deb_file = askopenfile(mode='r', filetypes=[('.Deb file', '*.deb')])
-    status['installation_started'] = True
     if deb_file:
+        status['installation_started'] = True
+
         filename = os.path.abspath(deb_file.name).split('/')[-1]
         complete_filepath = os.path.abspath(deb_file.name).split('/')
         complete_filepath.pop(-1)
@@ -36,16 +37,19 @@ def install_tak():
             print('\n////////// created /etc/apt/keyrings directory. //////////')
         else:
             print('\n////////// /etc/apt/keyrings directory exists. //////////')
-            
+
         # install postgresql
         check_keyrings_dir = subprocess.run(['ls'], cwd='/etc/apt/keyrings', stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
-        if('postgresql.asc' not in check_keyrings_dir):
+        check_postgresql = subprocess.run(['sudo', 'apt', 'list', '--installed', 'postgresql-15'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
+        if('postgresql.asc' not in check_keyrings_dir or 'postgresql-15' not in check_postgresql):
             install_postgres1 = 'sudo curl https://www.postgresql.org/media/keys/ACCC4CF8.asc --output /etc/apt/keyrings/postgresql.asc'
             install_postgres2 = 'echo "deb [signed-by=/etc/apt/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" /etc/apt/sources.list.d/postgresql.list'
             subprocess.run(install_postgres1.split(' '))
             subprocess.run(['sudo', 'sh', '-c'] + install_postgres2.split(' '))
             subprocess.run(['sudo', 'apt', 'update'])
-            print('\n////////// postgres installed. //////////')
+            print('\n////////// postgresql-15 installed. //////////')
+        else:
+            print('\n////////// postgresql-15 exists. //////////')
 
         os.chdir(filepath)
         # wait for the process to be processed for a bit and wait until it shows a prompt and THEN press y.
