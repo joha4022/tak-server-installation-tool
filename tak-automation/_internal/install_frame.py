@@ -40,18 +40,19 @@ def install_tak():
         
         # check for curl
         check_curl = subprocess.run(['sudo', 'apt', 'list', '--installed', 'curl'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
-        if('curl' not in check_curl):
+        if('curl' not in check_curl[1]):
             subprocess.run(['sudo','apt','install','curl'])
             print('\n////////// curl installed.  //////////')
 
         # install postgresql
         check_keyrings_dir = subprocess.run(['ls'], cwd='/etc/apt/keyrings', stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
         check_postgresql = subprocess.run(['sudo', 'apt', 'list', '--installed', 'postgresql-15'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
-        if('postgresql.asc' not in check_keyrings_dir or 'postgresql-15' not in check_postgresql):
+        if('postgresql.asc' not in check_keyrings_dir or 'postgresql-15' not in check_postgresql[1]):
             install_postgres1 = 'sudo curl https://www.postgresql.org/media/keys/ACCC4CF8.asc --output /etc/apt/keyrings/postgresql.asc'
-            install_postgres2 = 'echo "deb [signed-by=/etc/apt/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" /etc/apt/sources.list.d/postgresql.list'
+            install_postgres2 = "'"'echo "deb [signed-by=/etc/apt/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" /etc/apt/sources.list.d/postgresql.list'"'"
             subprocess.run(install_postgres1.split(' '))
-            subprocess.run(['sudo', 'sh', '-c'] + install_postgres2.split(' '))
+            test = subprocess.run(['sudo', 'sh', '-c', install_postgres2])
+            print(' '.join(test.args))
             subprocess.run(['sudo', 'apt', 'update'])
             if('postgresql-15' in check_postgresql):
                 print('\n////////// postgresql-15 installed. //////////')
