@@ -37,6 +37,12 @@ def install_tak():
             print('\n////////// created /etc/apt/keyrings directory. //////////')
         else:
             print('\n////////// /etc/apt/keyrings directory exists. //////////')
+        
+        # check for curl
+        check_curl = subprocess.run(['sudo', 'apt', 'list', '--installed', 'curl'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
+        if('curl' not in check_curl):
+            subprocess.run(['sudo','apt','install','curl'])
+            print('\n////////// curl installed.  //////////')
 
         # install postgresql
         check_keyrings_dir = subprocess.run(['ls'], cwd='/etc/apt/keyrings', stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
