@@ -3,7 +3,7 @@ TAK Automation is a tool that automates WINTAK or TAK server installation, delet
 
 ## To Start
 1. Clone the this repository and open up a terminal. <br>
-2. Run the tak-automation application by navigating to the cloned repository and typing: ```sudo ./tak-automation```
+2. To run the tak-automation application, navigate to the directory where the tak-automation.exe file is and type: ```sudo ./tak-automation```
 
 ## Functionalities
 There are 3 main functionalities to the TAK Automation, which are:
