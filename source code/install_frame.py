@@ -51,7 +51,7 @@ def install_tak():
             install_postgres1 = 'sudo curl https://www.postgresql.org/media/keys/ACCC4CF8.asc --output /etc/apt/keyrings/postgresql.asc'
             install_postgres2 = 'echo "deb [signed-by=/etc/apt/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/postgresql.list'
             subprocess.run(install_postgres1.split(' '))
-            subprocess.run(['sudo', 'sh', '-c', "'" + install_postgres2 + "'"])
+            subprocess.run(['sudo', 'sh', '-c', "'echo", '"deb', '[signed-by=/etc/apt/keyrings/postgresql.asc]', 'http://apt.postgresql.org/pub/repos/apt', '$(lsb_release', '-cs)-pgdg', 'main"', "/etc/apt/sources.list.d/postgresql.list'"])
             subprocess.run(['sudo', 'apt', 'update'])
             subprocess.run(['sudo', 'apt', 'install', 'postgresql-15'], input=b'y\n')
             print('\n////////// postgresql installed. //////////')
