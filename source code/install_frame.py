@@ -23,12 +23,12 @@ def install_tak():
         filepath = '/'.join(complete_filepath)
 
         # check for java
-        check_java = subprocess.run(['sudo','java', '-version'], stderr=subprocess.PIPE, universal_newlines=True).stderr.split('\n')
-        if('openjdk' not in check_java[0]):
-            subprocess.run(['sudo', 'apt', 'install', 'default-jre'], input=b'y\n')
-            print('\n///////// {} installed. //////////'.format(check_java[0]))
+        check_java = subprocess.run(['sudo', 'apt', 'list', '--installed', 'openjdk*'], stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
+        if('openjdk' not in check_java[1]):
+            subprocess.run(['sudo', 'apt', 'install', 'openjdk-11-jre-headless'], input=b'y\n')
+            print('\n///////// {} installed. //////////'.format(check_java[1]))
         else:
-            print('////////// current version of java: {}. //////////'.format(check_java[0]))
+            print('////////// {} already installed. //////////'.format(check_java[1]))
 
         # check for keyrings folder
         check_keyrings_dir = subprocess.run(['ls'], cwd='/etc/apt', stdout=subprocess.PIPE, universal_newlines=True).stdout.split('\n')
