@@ -1,5 +1,5 @@
 # tak-automation
-TAK Automation is a tool that automates WINTAK or TAK server installation, deletion, and certificates with a basic GUI using Tkinter.
+TAK Automation is a tool that automates TAK server installation, deletion, and certificates with a basic GUI using Tkinter.
 
 ## To Start
 1. Clone the this repository and open up a terminal. <br>
