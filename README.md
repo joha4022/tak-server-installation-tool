@@ -3,7 +3,7 @@ TAK Automation is a tool that automates TAK server installation, deletion, and c
 
 ## To Start
 1. Clone the this repository and open up a terminal. <br>
-2. To run the tak-automation application, navigate to the directory where the tak-automation.exe file is and type: ```sudo ./tak-automation```
+2. To run the tak-automation.py file using sudo: ```sudo python3 ./tak-automation.py```
 
 ## Functionalities
 There are 3 main functionalities to the TAK Automation, which are:
