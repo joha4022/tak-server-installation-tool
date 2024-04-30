@@ -3,8 +3,10 @@ from tkinter import *
 from tkinter import ttk
 import cert_creation as cc
 import install_frame as intf
+import start_tak as st
 import threading
 import os
+
 
 # widgets = button, input, etc.
 # window = container that can hold widgets
@@ -19,6 +21,7 @@ tak_status = StringVar()
 meta_data = StringVar()
 cert_status = StringVar()
 user_cert_status = StringVar()
+tak_status_text_bottom = StringVar()
 
 state = StringVar()
 city = StringVar()
@@ -54,7 +57,7 @@ b_uninstall['command'] = lambda: [tool_progress('start','Uninstalling TAK...'),
 ### 2nd frame: ROOT CERTIFICATE INFORMATION
 
 # root ca info frame
-root_ca_info_frame = LabelFrame(frame, text='Root/Server/Admin Certificate(s)')
+root_ca_info_frame = LabelFrame(frame, text='Root / Server / Admin Certificate(s)')
 root_ca_info_frame.grid(row=1, column=0, sticky='news', padx=20, pady=10)
 
 # cert information text
@@ -95,7 +98,7 @@ root_cert_generate_button['command'] =lambda: [tool_progress('start','Creating a
 
 # user cert info frame
 user_cert_info_frame = LabelFrame(frame, text='User Certificate(s)')
-user_cert_info_frame.grid(row=2, column=0, sticky='news', padx=20, pady=10)
+user_cert_info_frame.grid(row=2, column=0, sticky='news', padx=20)
 
 # user cert information text
 user_cert_info_label = ttk.Label(user_cert_info_frame, textvariable=user_cert_status)
@@ -113,17 +116,26 @@ user_cert_generate_button['command'] = lambda: [tool_progress('start','Creating 
 user_cert_generate_button.grid(row=3, column=0, sticky='w', padx=10, pady=(0,10))
 
 
+### TAK server start status text
+tak_server_status_text = ttk.Label(frame, textvariable=tak_status_text_bottom)
+tak_server_status_text.grid(row=4, column=0, padx=(20,0), sticky='w', pady=(0,10))
+
+### Close and Start button
+tak_frame = LabelFrame(frame)
+tak_frame.grid(row=5, column=0, pady=(0,5))
+
+ttk.Button(tak_frame, text='Start', command=st.start_tak).grid(padx=(0,5), row=0, column=0)
+ttk.Button(tak_frame, text='Close', command=window.destroy).grid(padx=(5,0), row=0, column=1)
+
+
 ### 4th frame: PROGRESS BAR
 
 progress_bar_text = ttk.Label(textvariable=tool_status)
-progress_bar_text.grid(row=3, column=0, sticky='news')
+progress_bar_text.grid(row=6, column=0, sticky='news')
 
 progress_bar = ttk.Progressbar(mode='determinate')
-progress_bar.grid(row=4, column=0, sticky='news')
+progress_bar.grid(row=7, column=0, sticky='news')
 
-
-### Close button
-ttk.Button(frame, text='Close', command=window.destroy).grid(pady=(0,10))
 
 
 ### functions 
@@ -162,6 +174,9 @@ def disable_all():
     user_certs_quantity_input.config(state='disabled')
 
 def refresh():
+    st.start_tak()
+    tak_status_text_bottom.set(st.status['message'])
+
     intf.tak_checker()
     b_install.config(state=intf.status['install_b'])
     b_uninstall.config(state=intf.status['uninstall_b'])

@@ -93,4 +93,3 @@ def tak_checker():
     else:
         status['uninstall_b'] = 'disabled'
         status['install_b'] = 'active'
-        status['tak_status'] = 'Click "Install" and select the TAK *.deb file to start the installation.'
