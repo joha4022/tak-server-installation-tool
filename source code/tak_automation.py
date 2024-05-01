@@ -31,34 +31,44 @@ user_certs_quantity = IntVar()
 
 tool_status = StringVar()
 
-### 1st frame: TAK INSTALLATION
+### 1st frame: TAK START STOP
+tak_frame = LabelFrame(frame)
+tak_frame.grid(row=0, column=0, pady=(10,0), sticky='new', padx=20)
+
+tak_start_b = ttk.Button(tak_frame, text='Start', command=st.start_tak)
+tak_start_b.grid(padx=10, sticky='e', row=0, column=0)
+tak_stop_b = ttk.Button(tak_frame, text='Stop', command=st.stop_tak)
+tak_stop_b.grid(padx=(0,10), sticky='e', row=0, column=1)
+
+tak_server_status_text = ttk.Label(tak_frame, textvariable=tak_status_text_bottom)
+tak_server_status_text.grid(row=0, column=2, sticky='w', pady=(10,10))
+
+
+### 2st frame: TAK INSTALLATION
 
 # tak installation frame
 tak_installation_frame = LabelFrame(frame, text='TAK Installation')
-tak_installation_frame.grid(row=0, column=0, sticky='new', padx=20, pady=10)
-
-# displays current version or status of the takserver
-tak_installtation_status = ttk.Label(tak_installation_frame, textvariable=tak_status)
-tak_installtation_status.grid(row=0, column=0, columnspan=20, sticky='w', padx=10, pady=10)
+tak_installation_frame.grid(row=1, column=0, sticky='new', padx=20, pady=10)
 
 # install and re-install buttons
 b_install = ttk.Button(tak_installation_frame, text="Install")
-b_install.grid(row=1, column=0, sticky='w', padx=10, pady=(0,10))
+b_install.grid(row=0, column=0, sticky='w', padx=10, pady=(0,10))
 b_install['command'] = lambda: [multi_thread(intf.install_tak,())]
 
 b_uninstall = ttk.Button(tak_installation_frame, text="Uninstall")
-b_uninstall.grid(row=1, column=1, sticky='w', pady=(0,10))
+b_uninstall.grid(row=0, column=1, sticky='w', pady=(0,10))
 b_uninstall['command'] = lambda: [tool_progress('start','Uninstalling TAK...'),
                                   multi_thread(intf.uninstall_tak,())]
 
+# displays current version or status of the takserver
+tak_installtation_status = ttk.Label(tak_installation_frame, textvariable=tak_status)
+tak_installtation_status.grid(row=0, column=3, columnspan=20, sticky='w', padx=10, pady=10)
 
-
-
-### 2nd frame: ROOT CERTIFICATE INFORMATION
+### 3nd frame: ROOT CERTIFICATE INFORMATION
 
 # root ca info frame
 root_ca_info_frame = LabelFrame(frame, text='Root / Server / Admin Certificate(s)')
-root_ca_info_frame.grid(row=1, column=0, sticky='news', padx=20, pady=10)
+root_ca_info_frame.grid(row=2, column=0, sticky='news', padx=20, pady=10)
 
 # cert information text
 meta_data_label = ttk.Label(root_ca_info_frame, textvariable=meta_data)
@@ -94,11 +104,11 @@ root_cert_generate_button['command'] =lambda: [tool_progress('start','Creating a
 
 
 
-### 3rd frame: USER CERTIFICATE INFORMATION
+### 4rd frame: USER CERTIFICATE INFORMATION
 
 # user cert info frame
 user_cert_info_frame = LabelFrame(frame, text='User Certificate(s)')
-user_cert_info_frame.grid(row=2, column=0, sticky='news', padx=20)
+user_cert_info_frame.grid(row=3, column=0, sticky='news', padx=20)
 
 # user cert information text
 user_cert_info_label = ttk.Label(user_cert_info_frame, textvariable=user_cert_status)
@@ -116,25 +126,19 @@ user_cert_generate_button['command'] = lambda: [tool_progress('start','Creating 
 user_cert_generate_button.grid(row=3, column=0, sticky='w', padx=10, pady=(0,10))
 
 
-### TAK server start status text
-tak_server_status_text = ttk.Label(frame, textvariable=tak_status_text_bottom)
-tak_server_status_text.grid(row=4, column=0, padx=(20,0), sticky='w', pady=(0,10))
 
-### Close and Start button
-tak_frame = LabelFrame(frame)
-tak_frame.grid(row=5, column=0, pady=(0,5))
+### 5th frame: CLOSE BUTTON
 
-ttk.Button(tak_frame, text='Start', command=st.start_tak).grid(padx=(0,5), row=0, column=0)
-ttk.Button(tak_frame, text='Close', command=window.destroy).grid(padx=(5,0), row=0, column=1)
+ttk.Button(frame, text='Close', command=window.destroy).grid(pady=(10,0), row=4, column=0)
 
-
-### 4th frame: PROGRESS BAR
+### 6th frame: PROGRESS BAR
 
 progress_bar_text = ttk.Label(textvariable=tool_status)
-progress_bar_text.grid(row=6, column=0, sticky='news')
+progress_bar_text.grid(row=5, column=0, sticky='news')
 
 progress_bar = ttk.Progressbar(mode='determinate')
-progress_bar.grid(row=7, column=0, sticky='news')
+progress_bar.grid(row=6, column=0, sticky='news')
+
 
 
 
@@ -176,6 +180,8 @@ def disable_all():
 def refresh():
     st.start_tak()
     tak_status_text_bottom.set(st.status['message'])
+    tak_start_b.config(state=st.status['start_button_state'])
+    tak_stop_b.config(state=st.status['stop_button_state'])
 
     intf.tak_checker()
     b_install.config(state=intf.status['install_b'])
@@ -209,7 +215,7 @@ def refresh():
             user_certs_quantity_input.config(state='disabled')
             user_cert_status.set('Create root/server/admin certificates before generating user certificate(s).')
     else:
-        user_cert_status.set('TAK needs to be installed.')
+        user_cert_status.set('TAK server not installed')
         disable_all()
 
     state.set('')

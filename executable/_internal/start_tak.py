@@ -3,7 +3,9 @@ import os
 
 status = {
     'message': '',
-    'ip': ''
+    'ip': '',
+    'start_button_state': '',
+    'stop_button_state': ''
 }
 
 def start_tak():
@@ -12,18 +14,33 @@ def start_tak():
     tak_status = 'service --status-all | grep "takserver"'
     ip_check = 'ip addr show | grep -oE "inet (addr:)?([0-9]*\.){3}[0-9]*"'
 
-
     if('tak' in os.listdir('/opt')):
         if('files' not in os.listdir('/opt/tak/certs')):
-            status['message'] = 'TAK admin cert needs to be generated to start TAK server.'
+            status['message'] = 'Generate Root / Server / Admin certificates'
+            status['start_button_state'] = 'disabled'
+            status['stop_button_state'] = 'disabled'
         else:
             current_tak_status = subprocess.run(tak_status, shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n')
             if(' [ - ]  takserver' in current_tak_status):
-                status['message'] = 'TAK server needs to be started.'
+                status['message'] = 'TAK server not running'
+                status['start_button_state'] = 'active'
+                status['stop_button_state'] = 'disabled'
             else:
                 status['ip'] = 'TAK server running on https://' + subprocess.run(ip_check, shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n')[1] + ':8443'
                 subprocess.run(tak_enable.split(' '))
                 subprocess.run(tak_start.split(' '))
+                status['start_button_state'] = 'disabled'
+                status['stop_button_state'] = 'active'
     else:
-        print(subprocess.run(ip_check, shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n')[1].split(' ')[1])
-        status['message'] = 'TAK server needs to be installed.'
+        status['message'] = 'TAK server not installed'
+        status['start_button_state'] = 'disabled'
+        status['stop_button_state'] = 'disabled'
+    
+def stop_tak():
+    tak_stop = 'sudo systemctl start takserver.service'
+
+    subprocess.run(tak_stop.split(' '))
+    status['message'] = 'TAK server not running'
+    status['start_button_state'] = 'active'
+    status['stop_button_state'] = 'disabled'
+
