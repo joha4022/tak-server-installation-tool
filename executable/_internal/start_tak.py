@@ -59,7 +59,7 @@ def start_tak():
         subprocess.run(['sudo', 'chown', '-R', '{}:{}'.format(user,user), '/home/{}/Desktop/tak_admin_{}.p12'.format(user, o_u)])
         def elevate_admin():
             elevate = subprocess.Popen(admin_cert_elevate, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            if(elevate.returncode == 0):
+            if(elevate.returncode != 0):
                 print(elevate.returncode)
                 print('there was an error')
                 elevate_admin()
