@@ -7,6 +7,8 @@ import start_tak as st
 import threading
 import os
 
+import subprocess
+
 
 # widgets = button, input, etc.
 # window = container that can hold widgets
@@ -35,10 +37,14 @@ tool_status = StringVar()
 tak_frame = LabelFrame(frame)
 tak_frame.grid(row=0, column=0, pady=(10,0), sticky='new', padx=20)
 
-tak_start_b = ttk.Button(tak_frame, text='Start', command=st.start_tak)
+tak_start_b = ttk.Button(tak_frame, text='Start')
 tak_start_b.grid(padx=10, sticky='e', row=0, column=0)
-tak_stop_b = ttk.Button(tak_frame, text='Stop', command=st.stop_tak)
+tak_start_b['command'] = lambda: [tool_progress('start','Starting TAK server...'),
+                                  multi_thread(st.start_tak,())]
+tak_stop_b = ttk.Button(tak_frame, text='Stop')
 tak_stop_b.grid(padx=(0,10), sticky='e', row=0, column=1)
+tak_stop_b['command'] = lambda: [tool_progress('start','Stopping TAK server...'),
+                                  multi_thread(st.stop_tak,())]
 
 tak_server_status_text = ttk.Label(tak_frame, textvariable=tak_status_text_bottom)
 tak_server_status_text.grid(row=0, column=2, sticky='w', pady=(10,10))
@@ -62,7 +68,7 @@ b_uninstall['command'] = lambda: [tool_progress('start','Uninstalling TAK...'),
 
 # displays current version or status of the takserver
 tak_installtation_status = ttk.Label(tak_installation_frame, textvariable=tak_status)
-tak_installtation_status.grid(row=0, column=3, columnspan=20, sticky='w', padx=10, pady=10)
+tak_installtation_status.grid(row=0, column=3, columnspan=20, sticky='w', padx=10, pady=(0,10))
 
 ### 3nd frame: ROOT CERTIFICATE INFORMATION
 
@@ -126,7 +132,6 @@ user_cert_generate_button['command'] = lambda: [tool_progress('start','Creating 
 user_cert_generate_button.grid(row=3, column=0, sticky='w', padx=10, pady=(0,10))
 
 
-
 ### 5th frame: CLOSE BUTTON
 
 ttk.Button(frame, text='Close', command=window.destroy).grid(pady=(10,0), row=4, column=0)
@@ -178,7 +183,7 @@ def disable_all():
     user_certs_quantity_input.config(state='disabled')
 
 def refresh():
-    st.start_tak()
+    st.check_tak()
     tak_status_text_bottom.set(st.status['message'])
     tak_start_b.config(state=st.status['start_button_state'])
     tak_stop_b.config(state=st.status['stop_button_state'])

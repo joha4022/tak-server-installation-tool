@@ -108,8 +108,6 @@ def make_admin_certs():
                         '{}tak_admin_{}.pem'.format(file_path, o_u), 
                         '{}tak_admin_{}-trusted.pem'.format(file_path, o_u), 
                         '{}tak_admin_{}.jks'.format(file_path, o_u), '-t', '{}admin_certs'.format(file_path) ])
-    subprocess.run(['java', '-jar', '/opt/tak/utils/UserManager.jar', 'certmod', '-A','/opt/tak/certs/files/admin_certs/{}tak_admin_{}.pem'.format(file_path, o_u)])
-    subprocess.run(['sudo', 'cp', '-V', '/opt/tak/certs/files/admin_certs/{}tak_admin_{}.p12'.format(file_path, o_u), '~/Desktop'])
     print('\n////////// created admin certs //////////')
 
 def make_user_certs():

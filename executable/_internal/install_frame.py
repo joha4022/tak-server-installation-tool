@@ -68,6 +68,7 @@ def install_tak():
 def uninstall_tak():
     # stop takserver
     subprocess.run(['sudo', 'systemctl', 'stop', 'takserver'])
+    subprocess.run(['sudo', 'systemctl', 'disable', 'takserver'])
     # kill all processes related to takserver
     subprocess.run(['sudo', 'killall','-9','takserver'])
     # kill all java related processes
@@ -93,3 +94,4 @@ def tak_checker():
     else:
         status['uninstall_b'] = 'disabled'
         status['install_b'] = 'active'
+        status['tak_status'] = ' '
