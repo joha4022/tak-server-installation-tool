@@ -62,7 +62,7 @@ def start_tak():
             error = elevate.communicate()
             if(error and elevate.returncode != 0):
                 # print(elevate.returncode)
-                print('\n////////// there was an error, attempting again to elevate the admin certificate again //////////')
+                print('\n////////// there was an error, attempting again to elevate the admin cert //////////')
                 elevate_admin()
             elif(elevate.returncode == 0):
                 # print(elevate.returncode)
