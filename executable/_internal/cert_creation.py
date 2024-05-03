@@ -78,7 +78,7 @@ def edit_meta_data():
                     'ORGANIZATION={}\n'.format(o) if 'ORGANIZATION=' in line else
                     'ORGANIZATIONAL_UNIT={}\n'.format(o_u) if 'ORGANIZATIONAL_UNIT=' in line else
                     line)
-        print("\n////////// cert-metadata.sh file has been edited //////////\n")
+        print("\n////////// cert-metadata.sh file has been edited //////////")
         subprocess.run(['sudo', 'chown', '-R', 'tak:tak', '/opt/tak/'])
         print("\n////////// file rights have been returned to the user tak //////////")
     else: 
@@ -97,6 +97,7 @@ def make_server_cert():
 
 def make_admin_certs():
     file_path = '/opt/tak/certs/files/'
+
     # create separate folder for admin certs
     os.mkdir('/opt/tak/certs/files/admin_certs')
     os.chdir('/opt/tak/certs')
@@ -108,6 +109,7 @@ def make_admin_certs():
                         '{}tak_admin_{}.pem'.format(file_path, o_u), 
                         '{}tak_admin_{}-trusted.pem'.format(file_path, o_u), 
                         '{}tak_admin_{}.jks'.format(file_path, o_u), '-t', '{}admin_certs'.format(file_path) ])
+    
     print('\n////////// created admin certs //////////')
 
 def make_user_certs():

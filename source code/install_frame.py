@@ -78,6 +78,9 @@ def uninstall_tak():
     # remove tak folder from /opt
     subprocess.run(['sudo', 'rm', '-rf', '/opt/tak'])
 
+    # for some reason, it fails to uninstall the first time, so run it again.
+    uninstall_tak()
+
     print('\n////////// TAK uninstallation complete //////////')
     tak_checker()
 

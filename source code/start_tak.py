@@ -1,6 +1,7 @@
 import subprocess
 import os
 import cert_creation as cc
+import time
 
 tak_status = 'service --status-all | grep "takserver"'
 ip_check = 'ip addr show | grep -oE "inet (addr:)?([0-9]*\.){3}[0-9]*"'
@@ -37,10 +38,11 @@ def check_tak():
 def start_tak():
     tak_enable = 'sudo systemctl enable takserver.service'
     tak_start = 'sudo systemctl start takserver.service'
-    file_path = '/opt/tak/certs/files/'
     user = os.listdir('/home')[0]
     o_u = cc.status['meta_data']['ORGANIZATIONAL_UNIT']
-
+    admin_cert_elevate = 'sudo java -jar /opt/tak/utils/UserManager.jar certmod -A /opt/tak/certs/files/admin_certs/tak_admin_{}.pem'.format(o_u)
+    
+    print("\n////////// starting TAK server //////////")
     subprocess.run(tak_enable.split(' '))
     subprocess.run(tak_start.split(' '))
 
@@ -52,9 +54,20 @@ def start_tak():
             admin_p12_cert = cert
     if(user not in admin_p12_cert):
         subprocess.run(['sudo', 'chown', '-R', '{}:{}'.format(user,user), '/opt/tak/certs/files/admin_certs/tak_admin_{}.p12'.format(o_u)])
-        subprocess.run(['java', '-jar', '/opt/tak/utils/UserManager.jar', 'certmod', '-A','/opt/tak/certs/files/admin_certs/tak_admin_{}.pem'.format(o_u)])
+        print("\n////////// copying admin .p12 certifcate to the user's Desktop //////////")
         subprocess.run(['sudo', 'cp', '-v', '/opt/tak/certs/files/admin_certs/tak_admin_{}.p12'.format(o_u), '/home/{}/Desktop'.format(user)])
         subprocess.run(['sudo', 'chown', '-R', '{}:{}'.format(user,user), '/home/{}/Desktop/tak_admin_{}.p12'.format(user, o_u)])
+        def elevate_admin():
+            elevate = subprocess.Popen(admin_cert_elevate, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if(elevate.returncode == 0):
+                print(elevate.returncode)
+                print('there was an error')
+                elevate_admin()
+            else:
+                print(elevate.returncode)
+                print('admin account has been elevated')
+        elevate_admin()
+        
     
     status['message'] = 'TAK server on https://' + subprocess.run(ip_check, shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n')[1].split(' ')[1] + ':8443'
     status['start_button_state'] = 'disabled'
@@ -64,6 +77,7 @@ def start_tak():
 def stop_tak():
     tak_stop = 'sudo systemctl stop takserver.service'
 
+    print("\n////////// shutting down TAK server //////////") 
     subprocess.run(tak_stop.split(' '))
     status['message'] = 'TAK server not running'
     status['start_button_state'] = 'active'
