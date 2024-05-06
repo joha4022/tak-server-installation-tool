@@ -132,17 +132,21 @@ user_cert_generate_button['command'] = lambda: [tool_progress('start','Creating 
 user_cert_generate_button.grid(row=3, column=0, sticky='w', padx=10, pady=(0,10))
 
 
-### 5th frame: CLOSE BUTTON
+### 5th frame: D2I
+d2i_team = ttk.Label(frame, text='I Corps D2I Team')
+d2i_team.grid(padx=20, sticky='e')
 
-ttk.Button(frame, text='Close', command=window.destroy).grid(pady=(10,0), row=4, column=0)
+### 6th frame: CLOSE BUTTON
 
-### 6th frame: PROGRESS BAR
+ttk.Button(frame, text='Close', command=window.destroy).grid(row=5, column=0)
+
+### 7th frame: PROGRESS BAR
 
 progress_bar_text = ttk.Label(textvariable=tool_status)
-progress_bar_text.grid(row=5, column=0, sticky='news')
+progress_bar_text.grid(row=6, column=0, sticky='news')
 
 progress_bar = ttk.Progressbar(mode='determinate')
-progress_bar.grid(row=6, column=0, sticky='news')
+progress_bar.grid(row=7, column=0, sticky='news')
 
 
 
