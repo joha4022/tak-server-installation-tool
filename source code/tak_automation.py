@@ -7,8 +7,6 @@ import start_tak as st
 import threading
 import os
 
-import subprocess
-
 
 # widgets = button, input, etc.
 # window = container that can hold widgets
@@ -33,6 +31,9 @@ user_certs_quantity = IntVar()
 
 tool_status = StringVar()
 
+icon = PhotoImage(file = './resources/480px-USICorpsDUI.png')
+window.iconphoto(False, icon)
+
 ### 1st frame: TAK START STOP
 tak_frame = LabelFrame(frame)
 tak_frame.grid(row=0, column=0, pady=(10,0), sticky='new', padx=20)
@@ -48,6 +49,14 @@ tak_stop_b['command'] = lambda: [tool_progress('start','Stopping TAK server...')
 
 tak_server_status_text = ttk.Label(tak_frame, textvariable=tak_status_text_bottom)
 tak_server_status_text.grid(row=0, column=2, sticky='w', pady=(10,10))
+
+def copy():
+    window.clipboard_clear()
+    window.clipboard_append(tak_status_text_bottom.get().split('on')[1])
+
+address_copy = ttk.Button(tak_frame, text='copy')
+address_copy.grid(row=0, column=3, sticky='e', pady=(10,10), padx=(10,10))
+address_copy['command'] = lambda: [copy()]
 
 
 ### 2st frame: TAK INSTALLATION

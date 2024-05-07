@@ -113,12 +113,16 @@ def make_admin_certs():
     print('\n////////// created admin certs //////////')
 
 def make_user_certs():
+    user = os.listdir('/home')[0]
     file_path = '/opt/tak/certs/files/'
     # check if user_certs folder exists, if not, create.
     check_user_certs_folder = os.listdir('/opt/tak/certs/files')
     if('user_certs' not in check_user_certs_folder):
         # create separate folder for all user certs within certs/files folder
         os.mkdir('/opt/tak/certs/files/user_certs')
+        # if user certs folder do not exist on the desktop create
+        if('user_certs' not in os.listdir('/home/{}/Desktop'.format(user))):
+            os.mkdir('/home/{}/Desktop/user_certs'.format(user))
         for count in range(1,q + 1):
             os.chdir('/opt/tak/certs/files')
             os.mkdir('user_{}'.format(count))
@@ -133,6 +137,7 @@ def make_user_certs():
                             '{}user_{}-trusted.pem'.format(file_path, count), 
                             '{}user_{}.jks'.format(file_path, count), '-t', '{}user_{}'.format(file_path, count) ])
             subprocess.run(['mv', '{}user_{}'.format(file_path, count), '-t', '{}/user_certs'.format(file_path)])
+            subprocess.run(['sudo', 'cp', '-r', '{}user_certs/user_{}'.format(file_path, count),  '/home/{}/Desktop/user_certs'.format(user)])
     else:  
         # check for exisiting user certs
         existing_user_certs = os.listdir('/opt/tak/certs/files/user_certs')
@@ -149,8 +154,10 @@ def make_user_certs():
                             '{}user_{}.pem'.format(file_path, count), 
                             '{}user_{}-trusted.pem'.format(file_path, count), 
                             '{}user_{}.jks'.format(file_path, count), '-t', '{}user_{}'.format(file_path, count) ])
+            subprocess.run(['sudo', 'cp', '-r', '{}user_{}'.format(file_path, count),  '/home/{}/Desktop/user_certs'.format(user)])
             subprocess.run(['mv', '{}user_{}'.format(file_path, count), '-t', '{}/user_certs'.format(file_path)])
-
+    # check if permission change is necessary 
+    # subprocess.run('sudo chown -R {}:{} /home/{}/Desktop/user_certs'.format(user, user, user), shell=True)
 
 def generate(type, state, city, org, org_u, quant):
     global s, c, o, o_u, q

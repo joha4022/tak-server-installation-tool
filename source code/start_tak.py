@@ -25,7 +25,7 @@ def check_tak():
                 status['start_button_state'] = 'active'
                 status['stop_button_state'] = 'disabled'
             else:
-                status['message'] = 'TAK server on https://' + subprocess.run(ip_check, shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n')[1].split(' ')[1] + ':8443'
+                status['message'] = 'TAK Server on https://' + subprocess.run(ip_check, shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n')[1].split(' ')[1] + ':8443'
                 status['start_button_state'] = 'disabled'
                 status['stop_button_state'] = 'active'
     else:

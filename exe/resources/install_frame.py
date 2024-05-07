@@ -3,6 +3,8 @@ from tkinter.filedialog import askopenfile
 import subprocess
 import os
 
+user = os.listdir('/home')[0]
+
 status = {
         'install_b': 'active',
         'uninstall_b': 'disabled',
@@ -12,7 +14,7 @@ status = {
 
 def install_tak():
     # install WINTAK
-    os.chdir('/home')
+    os.chdir('/home/{}'.format(user))
     deb_file = askopenfile(mode='r', filetypes=[('.Deb file', '*.deb')])
     if deb_file:
         status['installation_started'] = True
@@ -86,6 +88,7 @@ def uninstall_tak():
 
     # remove tak folder from /opt
     subprocess.run(['sudo', 'rm', '-rf', '/opt/tak'])
+    subprocess.run('sudo rm -rf /home/{}/Desktop/user_certs'.format(user), shell=True)
 
     print('\n////////// TAK uninstallation complete //////////')
     tak_checker()

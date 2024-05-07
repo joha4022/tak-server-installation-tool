@@ -4,7 +4,7 @@ TAK Automation is a tool that automates TAK server installation, deletion, and c
 
 ## To Start
 1. Clone or download this repository and open up a terminal. <br>
-2. Go into exe folder and run the exe file using sudo: ```sudo ./exe```
+2. Navigate to the exe folder and the exe file using sudo: ```sudo ./exe```
 
 ## Functionalities
 There are 4 main functionalities to the TAK Automation, which are:
