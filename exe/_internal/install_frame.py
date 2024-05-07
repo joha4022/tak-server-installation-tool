@@ -69,17 +69,23 @@ def uninstall_tak():
     # stop takserver
     subprocess.run(['sudo', 'systemctl', 'stop', 'takserver'])
     subprocess.run(['sudo', 'systemctl', 'disable', 'takserver'])
+
+
     # kill all processes related to takserver
     subprocess.run(['sudo', 'killall','-9','takserver'])
     # kill all java related processes
     subprocess.run(['sudo', 'killall','-9','java'])
-    # uninstall takserver
-    subprocess.run(['sudo', 'apt', 'remove', '--purge', 'takserver'], input=b'y\n')
+
+    def purge_tak():
+        # uninstall takserver
+        purge = subprocess.run(['sudo', 'apt', 'remove', '--purge', 'takserver'], input=b'y\n', stderr=subprocess.PIPE)
+        purge.communicate()
+        if(purge and purge.returncode != 0):
+            purge_tak()
+    purge_tak()
+
     # remove tak folder from /opt
     subprocess.run(['sudo', 'rm', '-rf', '/opt/tak'])
-
-    # for some reason, it fails to uninstall the first time, so run it again.
-    uninstall_tak()
 
     print('\n////////// TAK uninstallation complete //////////')
     tak_checker()
