@@ -201,7 +201,7 @@ def refresh():
     tak_start_b.config(state=st.status['start_button_state'])
     tak_stop_b.config(state=st.status['stop_button_state'])
     # disable the copy button if there is no ip ready for the user
-    if('https://' in st.status['message'].split('on')[1]):
+    if('https://' in st.status['message']):
         address_copy.config(state='active')
     else:
         address_copy.config(state='disabled')
