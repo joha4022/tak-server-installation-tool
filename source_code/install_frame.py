@@ -92,7 +92,7 @@ def offline_install_tak(deb_file):
         check_java = subprocess.run('sudo dpkg -l openjdk-11*', shell=True, stdout=subprocess.PIPE)
         if(check_java.returncode != 0):
             print('\033[1;33minstalling openjdk-11-jre-headless...\033[0m')
-            subprocess.run('sudo tar -xf {}/openjdk-11-jre-headless.tar.gz -C {}/'.format(rf), shell=True)
+            subprocess.run('sudo tar -xf {}/openjdk-11-jre-headless.tar.gz -C {}/'.format(rf, rf), shell=True)
             subprocess.run('sudo dpkg -i {}/openjdk-11-jre-headless/*.deb'.format(rf), shell=True)
             print('\033[1;32mopenjdk-11-jre-headless was installed.\033[0m')
 
