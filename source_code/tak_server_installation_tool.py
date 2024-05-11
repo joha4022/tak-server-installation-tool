@@ -48,7 +48,7 @@ tak_start_b['command'] = lambda: [tool_progress('start','Starting TAK server...'
                                   multi_thread(st.start_tak,())]
 tak_stop_b = ttk.Button(tak_frame, text='Stop')
 tak_stop_b.grid(padx=(0,10), sticky='e', row=0, column=1)
-tak_stop_b['command'] = lambda: [tool_progress('start','Stopping TAK server...'),
+tak_stop_b['command'] = lambda: [tool_progress('start','Shutting down TAK server...'),
                                   multi_thread(st.stop_tak,())]
 
 tak_server_status_text = ttk.Label(tak_frame, textvariable=tak_status_text_bottom)

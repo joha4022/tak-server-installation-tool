@@ -80,34 +80,34 @@ def offline_install_tak(deb_file):
         complete_filepath = os.path.abspath(deb_file.name).split('/')
         complete_filepath.pop(-1)
         filepath = '/'.join(complete_filepath)
-
+        rf = ('/').join(subprocess.run('find /home -name "offline-update.tar.gz"', shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n')[0].split('/')[:-1])
         # do initial update
         print('\033[1;33mextracting and transferring offline ubuntu update files...\033[0m')
-        subprocess.run('sudo tar -xf ./resources/offline-update.tar.gz -C ./resources/', shell=True)
+        subprocess.run('sudo tar -xf {}/offline-update.tar.gz -C {}/'.format(rf, rf), shell=True)
         # fix this to /var/lib/apt/lists
-        subprocess.run('sudo cp -a ./resources/offline-update/. /var/lib/apt/lists', shell=True)
+        subprocess.run('sudo cp -a {}/offline-update/. /var/lib/apt/lists'.format(rf), shell=True)
         print('\033[1;32minitial update complete.\033[0m')
 
         # check for java
         check_java = subprocess.run('sudo dpkg -l openjdk-11*', shell=True, stdout=subprocess.PIPE)
         if(check_java.returncode != 0):
             print('\033[1;33minstalling openjdk-11-jre-headless...\033[0m')
-            subprocess.run('sudo tar -xf ./resources/openjdk-11-jre-headless.tar.gz -C ./resources/', shell=True)
-            subprocess.run('sudo dpkg -i ./resources/openjdk-11-jre-headless/*.deb', shell=True)
+            subprocess.run('sudo tar -xf {}/openjdk-11-jre-headless.tar.gz -C {}/'.format(rf), shell=True)
+            subprocess.run('sudo dpkg -i {}/openjdk-11-jre-headless/*.deb'.format(rf), shell=True)
             print('\033[1;32mopenjdk-11-jre-headless was installed.\033[0m')
 
         # install postgresql
         check_postgresql = subprocess.run('sudo dpkg -l postgresql-15', shell=True, stdout=subprocess.PIPE)
         if(check_postgresql.returncode != 0):
             print('\033[1;33minstalling postgresql-15...\033[0m')
-            subprocess.run('sudo tar -xf ./resources/postgresql-15.tar.gz -C ./resources/', shell=True)
-            subprocess.run('sudo dpkg -i ./resources/postgresql-15/*.deb', shell=True)
+            subprocess.run('sudo tar -xf {}/postgresql-15.tar.gz -C /'.format(rf,rf), shell=True)
+            subprocess.run('sudo dpkg -i {}/postgresql-15/*.deb'.format(rf), shell=True)
             print('\033[1;32mpostgresql-15 installed.\033[0m')
 
         # install takserver dependencies
         print('\033[1;33minstalling takserver dependencies...\033[0m')
-        subprocess.run('sudo tar -xf ./resources/takserver_5.x-packages.tar.gz -C ./resources/', shell=True)
-        subprocess.run('sudo dpkg -i ./resources/takserver_5.x-packages/*.deb', shell=True)
+        subprocess.run('sudo tar -xf {}/takserver_5.x-packages.tar.gz -C {}/'.format(rf,rf), shell=True)
+        subprocess.run('sudo dpkg -i {}/takserver_5.x-packages/*.deb'.format(rf), shell=True)
         print('\033[1;32mtakserver dependencies installed.\033[0m')
 
     os.chdir(filepath)
@@ -153,14 +153,13 @@ def uninstall_tak():
         purge = subprocess.run(['sudo', 'apt', 'remove', '--purge', 'takserver'], input=b'y\n')
         if(purge and purge.returncode != 0):
             purge_tak()
+        else:
+            # remove tak folder from /opt
+            subprocess.run(['sudo', 'rm', '-rf', '/opt/tak'])
+            subprocess.run('sudo rm -rf /home/{}/Desktop/user_certs'.format(user), shell=True)
+            tak_checker()
+            print('\033[1;32msuccessfully\033[0m \033[1;31muninstalled\033[0m \033[1;32mTAK server.\033[0m')
     purge_tak()
-
-    # remove tak folder from /opt
-    subprocess.run(['sudo', 'rm', '-rf', '/opt/tak'])
-    subprocess.run('sudo rm -rf /home/{}/Desktop/user_certs'.format(user), shell=True)
-
-    print('\033[1;32msuccessfully\033[0m \033[1;31muninstalled\033[0m \033[1;32mTAK server.\033[0m')
-    tak_checker()
 
 def tak_checker():
     # see if takserver can be found as one of the installed application
